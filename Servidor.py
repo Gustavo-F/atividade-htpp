@@ -8,17 +8,27 @@ def workerThread(s):
     while True: 
         msg = s.recv(1024)
         if not msg: break
-        print('O cliente enviou: ', msg.decode().split('username'))
-        msg = msg[::-1] #Inverte a String
+        msg_split = msg.decode().split('=')
+        password = msg_split[-1].strip()
+        username = msg_split[-2].strip().split('&')[0]
+
         try:
-           s.send(msg)
+            if password == PASSWORD and username == USERNAME:
+                print('Usuário e Senha corretos')
+
+                response = "HTTP/1.1 200 OK\nContent-Type: text/html\n\n<html><body>Hello World</body></html>\n"
+                print(f'Resposta:\n{response}')
+                
+                s.send(response.encode())
+            else:
+                print('Usuário ou Senha incorreto!')
         except:
             print('Erro ao responder.')
     s.close() 
   
 def Main(): 
     host = "" 
-    port = 2803
+    port = 2806
 
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
     server_socket.bind((host, port)) 
