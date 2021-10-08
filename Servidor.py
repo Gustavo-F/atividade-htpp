@@ -13,10 +13,16 @@ def workerThread(s):
         username = msg_split[-2].strip().split('&')[0]
 
         try:
+            with open('response.html', 'r') as file:
+                html_content = file.read().replace('\n', '')
+        except:
+            print('Não foi possível ler o arquivo!')
+
+        try:
             if password == PASSWORD and username == USERNAME:
                 print('Usuário e Senha corretos')
 
-                response = "HTTP/1.1 200 OK\nContent-Type: text/html\n\n<html><body>Hello World</body></html>\n"
+                response = f"HTTP/1.1 200 OK\nContent-Type: text/html\n\n{html_content}\n"
                 print(f'Resposta:\n{response}')
                 
                 s.send(response.encode())
@@ -28,7 +34,7 @@ def workerThread(s):
   
 def Main(): 
     host = "" 
-    port = 2806
+    port = 2809
 
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
     server_socket.bind((host, port)) 
