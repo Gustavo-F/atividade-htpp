@@ -30,16 +30,17 @@ def workerThread(s):
                     html_content = '<h1>Could not load HTML page.</h1>'
 
                 response = f"HTTP/1.1 401 Unauthorized\nContent-Type: text/html\n\n{html_content}\n"
-
+                
             s.send(response.encode())  
         except:
             print('Erro ao responder.')
         
-        s.close() 
+        s.shutdown(socket.SHUT_RDWR)
+        print('Conexão encarrada')
   
 def Main(): 
-    host = "" 
-    port = 2805
+    host = "127.0.0.1" 
+    port = 2550
 
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
     server_socket.bind((host, port)) 
