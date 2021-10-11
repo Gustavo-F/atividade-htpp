@@ -1,8 +1,8 @@
 import socket 
 import threading 
    
-USERNAME = 'gustavo'
-PASSWORD = 'senhaforte'
+USERNAME = 'ifsc'
+PASSWORD = 'aluno'
 
 def workerThread(s):
     while True: 
@@ -13,28 +13,33 @@ def workerThread(s):
         username = msg_split[-2].strip().split('&')[0]
 
         try:
-            with open('response.html', 'r') as file:
-                html_content = file.read().replace('\n', '')
-        except:
-            print('Não foi possível ler o arquivo!')
-
-        try:
             if password == PASSWORD and username == USERNAME:
-                print('Usuário e Senha corretos')
-
-                response = f"HTTP/1.1 200 OK\nContent-Type: text/html\n\n{html_content}\n"
-                print(f'Resposta:\n{response}')
+                try:
+                    with open('success.html', 'r') as file:
+                        html_content = file.read().replace('\n', '')
+                except:
+                    html_content = '<h1>Could not load HTML page.</h1>'
                 
-                s.send(response.encode())
+                response = f"HTTP/1.1 200 OK\nContent-Type: text/html\n\n{html_content}\n"
+
             else:
-                print('Usuário ou Senha incorreto!')
+                try:
+                    with open('index.html', 'r') as file:
+                        html_content = file.read().replace('\n', '')
+                except:
+                    html_content = '<h1>Could not load HTML page.</h1>'
+
+                response = f"HTTP/1.1 401 Unauthorized\nContent-Type: text/html\n\n{html_content}\n"
+
+            s.send(response.encode())  
         except:
             print('Erro ao responder.')
-    s.close() 
+        
+        s.close() 
   
 def Main(): 
     host = "" 
-    port = 2809
+    port = 2805
 
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
     server_socket.bind((host, port)) 
