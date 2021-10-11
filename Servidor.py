@@ -14,6 +14,7 @@ def workerThread(s):
 
         try:
             if password == PASSWORD and username == USERNAME:
+                print('\nLogin realizado com sucesso!')
                 try:
                     with open('success.html', 'r') as file:
                         html_content = file.read().replace('\n', '')
@@ -23,6 +24,7 @@ def workerThread(s):
                 response = f"HTTP/1.1 200 OK\nContent-Type: text/html\n\n{html_content}\n"
 
             else:
+                print('\nUsuário ou senha incorretos!')
                 try:
                     with open('index.html', 'r') as file:
                         html_content = file.read().replace('\n', '')
@@ -40,7 +42,7 @@ def workerThread(s):
   
 def Main(): 
     host = "127.0.0.1" 
-    port = 2550
+    port = 2551
 
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
     server_socket.bind((host, port)) 
@@ -50,7 +52,7 @@ def Main():
 
     while True: 
         s, addr = server_socket.accept() 
-        print('Cliente Conectado:', addr[0], ':', addr[1])  
+        print('\nCliente Conectado:', addr[0], ':', addr[1])  
         tw = threading.Thread(target=workerThread, args=[s])
         tw.start()
 
